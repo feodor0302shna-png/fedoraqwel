@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BeamNG.drive — симулятор, где машины ломаются по-настоящему</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#000; --bg2:#0e0e0e; --ink:#f0ece2; --mute:#a8a8a8; --line:#2b2b2b;
+  --sign:#f2c230; --sign-ink:#1c2127; --steel:#7d9bb5; --car:#c9392f;
+  --display:"Russo One","Arial Black",Impact,sans-serif;
+  --body:"PT Sans","Segoe UI",Arial,sans-serif;
+  color-scheme:dark;
+}
+:root[data-theme="dark"]{color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.08;margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sign);outline-offset:3px}
+
+/* hero */
+.hero{padding:72px 0 56px;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(40px,8vw,92px);max-width:11em;letter-spacing:-.01em}
+.hero p.lead{max-width:34em;color:var(--mute);font-size:20px;margin:22px 0 0}
+.rig{margin-top:44px;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:20px 20px 24px}
+.rig svg{width:100%;height:auto;display:block}
+.ctrl{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px}
+.ctrl label{font-weight:700}
+.ctrl input[type=range]{flex:1 1 220px;accent-color:var(--sign);height:32px}
+.ctrl output{font-family:var(--display);min-width:4.5em;text-align:right;font-size:22px}
+.hint{color:var(--mute);font-size:15px;margin:6px 0 0}
+
+/* sections */
+section{padding:72px 0;border-bottom:1px solid var(--line)}
+h2{font-size:clamp(28px,4.5vw,44px);margin-bottom:36px;max-width:16em}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:0 56px}
+.feat div{padding:22px 0;border-top:1px solid var(--line)}
+.feat h3{font-size:22px;margin-bottom:8px}
+.feat p{margin:0;color:var(--mute)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px}
+.facts dt{color:var(--mute);font-size:15px}
+.facts dd{margin:2px 0 0;font-family:var(--display);font-size:24px}
+
+.list{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 40px}
+.list li{padding:14px 0;border-top:1px solid var(--line)}
+.list b{display:block;font-family:var(--display);font-weight:400;font-size:19px}
+.list span{color:var(--mute);font-size:16px}
+.note{color:var(--mute);font-size:16px;margin-top:24px;max-width:40em}
+.site{display:inline-block;margin-top:14px;color:var(--sign);font-weight:700}
+/* download */
+.dl{text-align:center;padding:88px 0 72px;border-bottom:0}
+.dl h2{margin-left:auto;margin-right:auto}
+.dl p{color:var(--mute);max-width:30em;margin:0 auto 32px}
+.btn{display:inline-block;background:var(--sign);color:var(--sign-ink);font-family:var(--display);font-size:24px;
+  padding:20px 48px;border-radius:4px;text-decoration:none;box-shadow:0 5px 0 rgba(0,0,0,.35);
+  transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.btn:active{transform:translateY(5px);box-shadow:0 0 0 rgba(0,0,0,.35)}
+.alt{margin-top:18px;font-size:16px}
+.alt a{color:var(--steel)}
+footer{padding:0 0 40px;color:var(--mute);font-size:14px;text-align:center}
+@media (max-width:720px){.feat{grid-template-columns:1fr}.hero{padding-top:48px}.btn{padding:18px 32px;font-size:21px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>BeamNG.drive: машины, которые ломаются по-настоящему</h1>
+    <p class="lead">Симулятор с мягкой физикой повреждений: каждая деталь кузова и подвески считается отдельно, поэтому ни одна авария не повторяется.</p>
+    <div class="rig">
+      <svg id="car" viewBox="0 0 420 200" role="img" aria-label="Схема автомобиля, врезающегося в стену: чем выше скорость, тем сильнее мнётся перед">
+        <line x1="0" y1="168" x2="420" y2="168" stroke="var(--line)" stroke-width="3"/>
+        <rect x="392" y="40" width="22" height="128" fill="var(--steel)"/>
+        <path id="body" fill="var(--car)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+        <path id="win" fill="var(--bg)" opacity=".85"/>
+        <g id="rw"><circle r="19" fill="#111"/><circle r="8" fill="var(--mute)"/></g>
+        <g id="fw"><circle r="19" fill="#111"/><circle r="8" fill="var(--mute)"/></g>
+      </svg>
+      <div class="ctrl">
+        <label for="spd">Скорость удара</label>
+        <input id="spd" type="range" min="0" max="100" value="55">
+        <output id="out" for="spd">55 км/ч</output>
+      </div>
+      <p class="hint">Упрощённая схема для наглядности. В игре деформация считается по сотням узлов и балок.</p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Что внутри</h2>
+    <div class="feat">
+      <div><h3>Мягкая физика</h3><p>Кузов — это сеть узлов и балок. Они гнутся, рвутся и пружинят, как настоящий металл.</p></div>
+      <div><h3>Большие открытые карты</h3><p>Горные серпантины, городские кварталы, пустыни и трассы. Ехать можно куда угодно.</p></div>
+      <div><h3>Десятки машин</h3><p>От маленьких хэтчбеков и пикапов до грузовиков и гоночных болидов. У каждой своя подвеска и управление.</p></div>
+      <div><h3>Моды и сценарии</h3><p>Каталог модов для машин и карт, режимы с испытаниями, ИИ-трафик и редактор своих сценариев.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Коротко об игре</h2>
+    <dl class="facts">
+      <div><dt>Разработчик</dt><dd>BeamNG GmbH</dd></div>
+      <div><dt>Платформа</dt><dd>Windows (Steam)</dd></div>
+      <div><dt>Жанр</dt><dd>Симулятор вождения</dd></div>
+      <div><dt>Режимы</dt><dd>Свободная езда, сценарии, моды</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Режимы игры</h2>
+    <ul class="list">
+      <li><b>Свободная езда</b><span>Выбираете карту и машину и катаетесь без правил и ограничений.</span></li>
+      <li><b>Сценарии и испытания</b><span>Готовые задания: погони, трюки, прохождение трассы на время.</span></li>
+      <li><b>Карьера</b><span>Зарабатывайте деньги на заданиях, покупайте и улучшайте машины.</span></li>
+      <li><b>Автобусные маршруты</b><span>Перевозка пассажиров по городу строго по расписанию.</span></li>
+      <li><b>Драг-рейсинг</b><span>Заезды на четверть мили с настройкой машины под старт.</span></li>
+      <li><b>Дерби и арены</b><span>Специальные арены, где главная цель — как следует побить машины.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Карты</h2>
+    <ul class="list">
+      <li><b>Западное побережье США</b><span>Шоссе, горы, город и пригороды в одной большой карте.</span></li>
+      <li><b>Восточное побережье США</b><span>Городские улицы, трассы и сельские дороги.</span></li>
+      <li><b>Италия</b><span>Узкие горные дороги и прибрежные городки.</span></li>
+      <li><b>Юта</b><span>Пустынные каньоны, скалы и длинные прямые.</span></li>
+      <li><b>Остров Джангл-Рок</b><span>Джунгли, бездорожье и необычные трассы для экспериментов.</span></li>
+      <li><b>Гоночные и тестовые площадки</b><span>Автодромы, ровные поля и полигоны для проверки физики.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Машины и настройка</h2>
+    <div class="feat">
+      <div><h3>Разный транспорт</h3><p>Легковые, пикапы, внедорожники, фургоны, грузовики, автобусы и спортивные машины. Названия брендов в игре вымышленные.</p></div>
+      <div><h3>Детальная настройка</h3><p>Меняйте подвеску, шины, давление, передаточные числа, двигатель и внешний вид прямо в игре.</p></div>
+      <div><h3>Реалистичные последствия</h3><p>Разбитая подвеска уводит машину в сторону, пробитое колесо меняет поведение, а перегретый мотор может заглохнуть.</p></div>
+      <div><h3>Управление</h3><p>Играть можно с клавиатуры, геймпада или руля с педалями, есть вид из салона и несколько камер.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Моды и сообщество</h2>
+    <div class="feat">
+      <div><h3>Каталог модов</h3><p>Новые машины, карты, звуки и сценарии можно ставить прямо из игры.</p></div>
+      <div><h3>Мультиплеер</h3><p>Играть вместе с другими позволяют моды сообщества, например BeamMP.</p></div>
+    </div>
+    <p class="note">Системные требования, цену и актуальные обновления смотрите на странице игры в Steam. Они могут меняться.</p>
+  </div>
+</section>
+
+<section class="dl" id="download">
+  <div class="wrap">
+    <h2>Садитесь за руль</h2>
+    <p>Игра распространяется через Steam. Страница откроется в новой вкладке, там можно купить игру и сразу установить.</p>
+    <a class="btn" href="https://store.steampowered.com/app/284160/BeamNGdrive/" target="_blank" rel="noopener">Скачать в Steam</a>
+    <p class="alt">Или посмотрите <a href="https://www.beamng.com/" target="_blank" rel="noopener">официальный сайт игры</a></p>
+    <a class="site" id="our-site" href="#" target="_blank" rel="noopener">Наш сайт</a>
+  </div>
+</section>
+<footer class="wrap">Неофициальный фан-сайт. BeamNG.drive и связанные названия принадлежат BeamNG GmbH.</footer>
+
+<script>
+(function(){
+  var base=[[40,150],[40,112],[95,100],[128,66],[238,66],[278,100],[350,108],[360,128],[356,150]];
+  var body=document.getElementById('body'),win=document.getElementById('win');
+  var fw=document.getElementById('fw'),rw=document.getElementById('rw');
+  var spd=document.getElementById('spd'),out=document.getElementById('out');
+  function draw(){
+    var v=+spd.value,t=v/100,pts=base.map(function(p,i){
+      var x=p[0],y=p[1];
+      if(x>190){
+        var d=(x-190)/170;
+        x-=t*d*95;
+        if(i===5||i===6) y-=t*(22+d*10);
+        if(i===7) y-=t*8;
+      }
+      if(i===3||i===4){y+=t*(i===4?10:0);}
+      return [x,y];
+    });
+    var d='M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1)}).join('L')+'Z';
+    body.setAttribute('d',d);
+    var a=pts[3],b=pts[4],c=pts[5],e=pts[2];
+    win.setAttribute('d','M'+(e[0]+10)+' 98L'+(a[0]+4)+' '+(a[1]+8)+'L'+(b[0]-4)+' '+(b[1]+8)+'L'+(c[0]-8)+' 98Z');
+    rw.setAttribute('transform','translate(92 150)');
+    fw.setAttribute('transform','translate('+(298-t*38).toFixed(1)+' '+(150+t*4)+')');
+    out.textContent=v+' км/ч';
+  }
+  spd.addEventListener('input',draw);draw();
+})();
+</script>
+</body>
+</html>
